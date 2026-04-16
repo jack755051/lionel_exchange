@@ -1,5 +1,3 @@
-version: "3.8"
-
 services:
   exchange-app:
     # 這裡會讀取目錄下的 Dockerfile 進行打包

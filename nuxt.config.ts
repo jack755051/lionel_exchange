@@ -3,9 +3,7 @@ export default defineNuxtConfig({
   runtimeConfig: {
     exchangeApiKey: '',
     apiSecret: '',
-    public: {
-      baseUrl: ''
-    }
+    baseUrl: ''
   },
 
   $development: {
@@ -13,9 +11,7 @@ export default defineNuxtConfig({
     runtimeConfig: {
       exchangeApiKey: '',
       apiSecret: 'dev_secret_12345',
-      public: {
-        baseUrl: 'http://localhost:8080/dev-api'
-      }
+      baseUrl: 'http://localhost:8080/dev-api'
     }
   },
 

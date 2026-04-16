@@ -22,3 +22,6 @@ logs
 .env
 .env.*
 !.env.example
+
+# Server cache (auto-generated)
+server/data/symbols.json
