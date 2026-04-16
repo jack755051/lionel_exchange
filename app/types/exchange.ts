@@ -9,6 +9,20 @@ export interface ApiErrorResponse {
   }
 }
 
+export interface BaseRequest {
+  access_key: string
+  base?: string
+  callback?: string
+  symbols?: string
+}
+
+export interface RatesRequest extends BaseRequest{}
+
+export interface HistoricalRatesRequest extends BaseRequest{
+  // YYYY-MM-DD 
+  date:string
+}
+
 /** /symbols */
 export interface SymbolsResponse {
   success: true
