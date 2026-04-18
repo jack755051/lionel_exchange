@@ -2,17 +2,12 @@
 export default defineNuxtConfig({
   runtimeConfig: {
     exchangeApiKey: '',
-    apiSecret: '',
-    baseUrl: ''
+    exchangeApiBase: '',
+    apiSecret: ''
   },
 
   $development: {
-    devtools: { enabled: true },
-    runtimeConfig: {
-      exchangeApiKey: '',
-      apiSecret: 'dev_secret_12345',
-      baseUrl: 'http://localhost:8080/dev-api'
-    }
+    devtools: { enabled: true }
   },
 
   $production: {
@@ -21,11 +16,7 @@ export default defineNuxtConfig({
     }
   },
 
-  modules: [
-    '@nuxt/eslint',
-    '@nuxt/ui',
-    '@pinia/nuxt'
-  ],
+  modules: ['@nuxt/eslint', '@nuxt/ui', '@pinia/nuxt'],
 
   css: ['~/assets/css/main.css'],
 
@@ -34,7 +25,7 @@ export default defineNuxtConfig({
   },
 
   routeRules: {
-    '/': { prerender: true }
+    // '/': { prerender: true }
   },
 
   compatibilityDate: '2025-01-15',

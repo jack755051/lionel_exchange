@@ -1,7 +1,7 @@
 import type { RatesResponse, ApiErrorResponse, RatesRequest } from '../../app/types/exchange'
 
 export default defineEventHandler(async (event) => {
-  const { exchangeApiKey, baseUrl } = useRuntimeConfig()
+  const { exchangeApiKey, exchangeApiBase } = useRuntimeConfig()
   const params = getQuery(event)
 
   const query: RatesRequest = {
@@ -11,7 +11,7 @@ export default defineEventHandler(async (event) => {
   }
 
   const data = await $fetch<RatesResponse | ApiErrorResponse>(
-    `${baseUrl}/latest`, { query }
+    `${exchangeApiBase}/latest`, { query }
   )
 
   if (!data.success) {

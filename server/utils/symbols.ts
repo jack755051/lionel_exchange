@@ -18,10 +18,10 @@ export async function readSymbolsCache(): Promise<SymbolsCache> {
 
 /** 從 fixer.io 拉取最新幣別並寫入快取 */
 async function fetchAndSave(): Promise<SymbolsCache> {
-  const { exchangeApiKey, baseUrl } = useRuntimeConfig()
+  const { exchangeApiKey, exchangeApiBase } = useRuntimeConfig()
 
   const data = await $fetch<SymbolsResponse | ApiErrorResponse>(
-    `${baseUrl}/symbols`,
+    `${exchangeApiBase}/symbols`,
     { query: { access_key: exchangeApiKey } }
   )
 
