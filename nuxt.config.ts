@@ -25,7 +25,7 @@ export default defineNuxtConfig({
   },
 
   routeRules: {
-    // '/': { prerender: true }
+    '/history': { isr: 60 }
   },
 
   compatibilityDate: '2025-01-15',

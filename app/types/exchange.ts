@@ -42,3 +42,9 @@ export interface RatesResponse {
 export interface HistoricalRatesResponse extends RatesResponse {
   historical: true
 }
+
+/** 歷史走勢單筆資料 (date + rate) */
+export interface HistoryRate {
+  date: string
+  rate: number
+}
