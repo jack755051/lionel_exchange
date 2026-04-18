@@ -1,74 +1,109 @@
+<script setup lang="ts">
+import type { RatesResponse, SymbolsResponse } from '~/types/exchange'
+import { PREFERRED_CURRENCIES, toCurrencyOptions } from '~/utils/currency'
+
+const selectedTarget = ref<string>(PREFERRED_CURRENCIES[0])
+
+const [ratesRes, symbolsRes] = await Promise.all([
+  useFetch<RatesResponse>('/api/latest', {
+    query: { symbols: PREFERRED_CURRENCIES.join(',') }
+  }),
+  useFetch<SymbolsResponse>('/api/symbols')
+])
+
+const { data, error, refresh, status } = ratesRes
+const { data: symbolsData } = symbolsRes
+
+const currencyOptions = computed(() =>
+  toCurrencyOptions(PREFERRED_CURRENCIES, symbolsData.value?.symbols)
+)
+
+useHead({ title: '即時匯率' })
+</script>
+
 <template>
-  <div>
-    <UPageHero
-      :links="[{
-        label: 'Get started',
-        to: 'https://ui.nuxt.com/docs/getting-started/installation/nuxt',
-        target: '_blank',
-        trailingIcon: 'i-lucide-arrow-right',
-        size: 'xl'
-      }, {
-        label: 'Use this template',
-        to: 'https://github.com/nuxt-ui-templates/starter',
-        target: '_blank',
-        icon: 'i-simple-icons-github',
-        size: 'xl',
-        color: 'neutral',
-        variant: 'subtle'
-      }]"
-    />
+  <UContainer class="py-8">
+    <div class="space-y-6">
+      <div>
+        <h1 class="text-3xl font-bold">
+          沖繩旅遊即時換匯
+        </h1>
+        <p class="text-sm text-gray-500">
+          基準幣別：{{ data?.base ?? '—' }}
+          <span class="ml-2">(Fixer 免費版鎖定 EUR)</span>
+        </p>
+      </div>
 
-    <UPageSection
-      id="features"
-      title="Everything you need to build modern Nuxt apps"
-      description="Start with a solid foundation. This template includes all the essentials for building production-ready applications with Nuxt UI's powerful component system."
-      :features="[{
-        icon: 'i-lucide-rocket',
-        title: 'Production-ready from day one',
-        description: 'Pre-configured with TypeScript, ESLint, Tailwind CSS, and all the best practices. Focus on building features, not setting up tooling.'
-      }, {
-        icon: 'i-lucide-palette',
-        title: 'Beautiful by default',
-        description: 'Leveraging Nuxt UI\'s design system with automatic dark mode, consistent spacing, and polished components that look great out of the box.'
-      }, {
-        icon: 'i-lucide-zap',
-        title: 'Lightning fast',
-        description: 'Optimized for performance with SSR/SSG support, automatic code splitting, and edge-ready deployment. Your users will love the speed.'
-      }, {
-        icon: 'i-lucide-blocks',
-        title: '100+ components included',
-        description: 'Access Nuxt UI\'s comprehensive component library. From forms to navigation, everything is accessible, responsive, and customizable.'
-      }, {
-        icon: 'i-lucide-code-2',
-        title: 'Developer experience first',
-        description: 'Auto-imports, hot module replacement, and TypeScript support. Write less boilerplate and ship more features.'
-      }, {
-        icon: 'i-lucide-shield-check',
-        title: 'Built for scale',
-        description: 'Enterprise-ready architecture with proper error handling, SEO optimization, and security best practices built-in.'
-      }]"
-    />
-
-    <UPageSection>
-      <UPageCTA
-        title="Ready to build your next Nuxt app?"
-        description="Join thousands of developers building with Nuxt and Nuxt UI. Get this template and start shipping today."
-        variant="subtle"
-        :links="[{
-          label: 'Start building',
-          to: 'https://ui.nuxt.com/docs/getting-started/installation/nuxt',
-          target: '_blank',
-          trailingIcon: 'i-lucide-arrow-right',
-          color: 'neutral'
-        }, {
-          label: 'View on GitHub',
-          to: 'https://github.com/nuxt-ui-templates/starter',
-          target: '_blank',
-          icon: 'i-simple-icons-github',
-          color: 'neutral',
-          variant: 'outline'
-        }]"
+      <UAlert
+        v-if="error"
+        color="error"
+        icon="i-lucide-circle-alert"
+        :title="error.statusMessage ?? '載入失敗'"
       />
-    </UPageSection>
-  </div>
+
+      <template v-else-if="data">
+        <div class="flex items-center gap-3">
+          <label class="text-sm text-gray-600">選擇目標幣別：</label>
+          <USelect
+            v-model="selectedTarget"
+            :items="currencyOptions"
+            class="w-64"
+          />
+        </div>
+
+        <UCard>
+          <div class="text-center space-y-2 py-4">
+            <p class="text-gray-500">
+              1 {{ data.base }} =
+            </p>
+            <p class="text-5xl font-bold text-primary">
+              {{ data.rates[selectedTarget]?.toFixed(4) ?? '—' }}
+            </p>
+            <p class="text-xl text-gray-600">
+              {{ selectedTarget }}
+            </p>
+          </div>
+        </UCard>
+
+        <div>
+          <h2 class="text-lg font-semibold mb-3">
+            主要幣別一覽
+          </h2>
+          <div class="grid grid-cols-2 sm:grid-cols-3 gap-4">
+            <UCard
+              v-for="opt in currencyOptions"
+              :key="opt.value"
+            >
+              <div class="text-sm text-gray-500">
+                {{ data.base }} → {{ opt.value }}
+              </div>
+              <div class="text-2xl font-semibold">
+                {{ data.rates[opt.value]?.toFixed(4) ?? '—' }}
+              </div>
+              <div
+                v-if="symbolsData?.symbols?.[opt.value]"
+                class="text-xs text-gray-400 mt-1"
+              >
+                {{ symbolsData.symbols[opt.value] }}
+              </div>
+            </UCard>
+          </div>
+        </div>
+
+        <div class="flex items-center justify-between pt-4">
+          <p class="text-xs text-gray-400">
+            更新時間：{{ new Date(data.timestamp * 1000).toLocaleString('zh-TW') }}
+          </p>
+          <UButton
+            icon="i-lucide-refresh-cw"
+            variant="soft"
+            :loading="status === 'pending'"
+            @click="refresh()"
+          >
+            重新整理
+          </UButton>
+        </div>
+      </template>
+    </div>
+  </UContainer>
 </template>

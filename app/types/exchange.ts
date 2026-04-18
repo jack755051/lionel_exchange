@@ -16,11 +16,11 @@ export interface BaseRequest {
   symbols?: string
 }
 
-export interface RatesRequest extends BaseRequest{}
+export type RatesRequest = BaseRequest
 
-export interface HistoricalRatesRequest extends BaseRequest{
-  // YYYY-MM-DD 
-  date:string
+export interface HistoricalRatesRequest extends BaseRequest {
+  // YYYY-MM-DD
+  date: string
 }
 
 /** /symbols */
