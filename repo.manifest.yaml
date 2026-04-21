@@ -1,0 +1,36 @@
+schema_version: 1
+repo_id: jpy-exchange
+name: JPY Exchange
+summary: 沖繩旅遊即時換匯儀表板，整合 Fixer.io API 提供即時匯率、換匯計算與歷史走勢
+owner: charlieTai
+status: active
+stack:
+  - nuxt4
+  - vue3
+  - typescript
+  - tailwindcss4
+  - nuxt-ui4
+  - pinia
+  - nitro
+  - docker
+entrypoints:
+  app: app/app.vue
+  server: server/
+commands:
+  install: pnpm install
+  dev: pnpm dev
+  build: pnpm build
+  preview: pnpm preview
+  lint: pnpm lint
+  typecheck: pnpm typecheck
+interfaces:
+  api: true
+  web: true
+  worker: false
+tags:
+  - exchange-rate
+  - fixer-io
+  - nuxt-learning
+  - ssr
+  - csr
+  - isr

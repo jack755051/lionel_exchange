@@ -1,42 +1,3 @@
----
-schema_version: 1
-repo_id: jpy-exchange
-name: JPY Exchange
-summary: 沖繩旅遊即時換匯儀表板，整合 Fixer.io API 提供即時匯率、換匯計算與歷史走勢
-owner: charlieTai
-status: active
-stack:
-  - nuxt4
-  - vue3
-  - typescript
-  - tailwindcss4
-  - nuxt-ui4
-  - pinia
-  - nitro
-  - docker
-entrypoints:
-  app: app/app.vue
-  server: server/
-commands:
-  install: pnpm install
-  dev: pnpm dev
-  build: pnpm build
-  preview: pnpm preview
-  lint: pnpm lint
-  typecheck: pnpm typecheck
-interfaces:
-  api: true
-  web: true
-  worker: false
-tags:
-  - exchange-rate
-  - fixer-io
-  - nuxt-learning
-  - ssr
-  - csr
-  - isr
----
-
 # JPY Exchange — 沖繩旅遊即時換匯儀表板
 
 [![Nuxt UI](https://img.shields.io/badge/Made%20with-Nuxt%20UI-00DC82?logo=nuxt&labelColor=020420)](https://ui.nuxt.com)
@@ -206,7 +167,7 @@ pnpm typecheck   # TypeScript 型別檢查
 - **@iconify-json/lucide** — Lucide 圖示集
 - **@iconify-json/simple-icons** — 品牌圖示集
 
-### Development
+### Dev Dependencies
 
 - **typescript** `^6.0.2`
 - **eslint** `^10.2.0` + `@nuxt/eslint`
